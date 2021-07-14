@@ -1,0 +1,15 @@
+{
+    "AssertionRule": {
+        "AssertedControls": [
+            {{SafetyRuleContractTestRoutingControlOneArn}}
+        ],
+        "WaitPeriodMs": 1000
+    },
+    "ControlPanelArn": {{RoutingControlContractTestControlPanelArn}},
+    "Name": "ContractTestAssertionRule",
+    "RuleConfig": {
+        "Inverted": true,
+        "Threshold": 1,
+        "Type": "AND"
+    }
+}

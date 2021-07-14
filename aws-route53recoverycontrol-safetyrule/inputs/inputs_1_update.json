@@ -1,0 +1,7 @@
+{
+    "Name": "ContractTestAssertionRule",
+    "SafetyRuleArn": "",
+    "AssertionRule": {
+        "WaitPeriodMs": 10
+    }
+}
