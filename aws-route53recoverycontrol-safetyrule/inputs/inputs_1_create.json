@@ -1,15 +1,21 @@
 {
     "AssertionRule": {
         "AssertedControls": [
-            {{SafetyRuleContractTestRoutingControlOneArn}}
+            "<Replace with valid control arn>"
         ],
         "WaitPeriodMs": 1000
     },
-    "ControlPanelArn": {{RoutingControlContractTestControlPanelArn}},
+    "ControlPanelArn": "<Replace with valid control panel arn>",
     "Name": "ContractTestAssertionRule",
     "RuleConfig": {
         "Inverted": true,
         "Threshold": 1,
         "Type": "AND"
-    }
+    },
+    "Tags": [
+        {
+            "Key": "SafetyRuleTestKey",
+            "Value": "SafetyRuleTestValue"
+        }
+    ]
 }

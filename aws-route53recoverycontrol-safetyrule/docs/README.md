@@ -16,7 +16,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
         "<a href="#gatingrule" title="GatingRule">GatingRule</a>" : <i><a href="gatingrule.md">GatingRule</a></i>,
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
         "<a href="#controlpanelarn" title="ControlPanelArn">ControlPanelArn</a>" : <i>String</i>,
-        "<a href="#ruleconfig" title="RuleConfig">RuleConfig</a>" : <i><a href="ruleconfig.md">RuleConfig</a></i>
+        "<a href="#ruleconfig" title="RuleConfig">RuleConfig</a>" : <i><a href="ruleconfig.md">RuleConfig</a></i>,
+        "<a href="#tags" title="Tags">Tags</a>" : <i>[ <a href="tag.md">Tag</a>, ... ]</i>
     }
 }
 </pre>
@@ -31,6 +32,8 @@ Properties:
     <a href="#name" title="Name">Name</a>: <i>String</i>
     <a href="#controlpanelarn" title="ControlPanelArn">ControlPanelArn</a>: <i>String</i>
     <a href="#ruleconfig" title="RuleConfig">RuleConfig</a>: <i><a href="ruleconfig.md">RuleConfig</a></i>
+    <a href="#tags" title="Tags">Tags</a>: <i>
+      - <a href="tag.md">Tag</a></i>
 </pre>
 
 ## Properties
@@ -63,7 +66,7 @@ _Required_: No
 
 _Type_: String
 
-_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
 
 #### ControlPanelArn
 
@@ -82,6 +85,16 @@ The rule configuration for an assertion rule or gating rule. This is the criteri
 _Required_: No
 
 _Type_: <a href="ruleconfig.md">RuleConfig</a>
+
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
+#### Tags
+
+A collection of tags associated with a resource
+
+_Required_: No
+
+_Type_: List of <a href="tag.md">Tag</a>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 

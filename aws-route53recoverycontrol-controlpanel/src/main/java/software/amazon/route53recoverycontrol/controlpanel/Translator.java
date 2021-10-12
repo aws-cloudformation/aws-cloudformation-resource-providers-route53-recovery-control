@@ -8,6 +8,7 @@ import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Descri
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.ListControlPanelsRequest;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.ListControlPanelsResponse;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.UpdateControlPanelRequest;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Tag;
 
 import java.util.Collection;
 import java.util.List;
@@ -30,10 +31,12 @@ public class Translator {
    * @return awsRequest the aws service request to create a resource
    */
   static CreateControlPanelRequest translateToCreateRequest(final ResourceModel model) {
-    return CreateControlPanelRequest.builder()
-            .clusterArn(model.getClusterArn())
-            .controlPanelName(model.getName())
-            .build();
+    CreateControlPanelRequest.Builder requestBuilder = CreateControlPanelRequest.builder();
+    if (model.getTags() != null) {
+      requestBuilder.tags(buildCreateControlPanelRequestTags(model.getTags()));
+    }
+    requestBuilder.clusterArn(model.getClusterArn()).controlPanelName(model.getName());
+    return requestBuilder.build();
   }
 
   /**
@@ -105,6 +108,15 @@ public class Translator {
     return streamOfOrEmpty(response.controlPanels())
         .map(controlPanel -> ResourceModel.builder()
             .controlPanelArn(controlPanel.controlPanelArn())
+            .build())
+        .collect(Collectors.toList());
+  }
+
+  static List<Tag> buildCreateControlPanelRequestTags(List<software.amazon.route53recoverycontrol.controlpanel.Tag> tags) {
+    return tags.stream()
+        .map(modelTag -> Tag.builder()
+            .key(modelTag.getKey())
+            .value(modelTag.getValue())
             .build())
         .collect(Collectors.toList());
   }

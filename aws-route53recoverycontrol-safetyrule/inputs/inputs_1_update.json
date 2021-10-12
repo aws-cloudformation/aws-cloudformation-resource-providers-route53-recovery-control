@@ -1,7 +1,16 @@
 {
-    "Name": "ContractTestAssertionRule",
-    "SafetyRuleArn": "",
+    "Name": "ContractTestAssertionRule123",
+    "ControlPanelArn": "<Replace with valid control panel arn>",
+    "SafetyRuleArn": "<Replace with valid safety rule arn>",
     "AssertionRule": {
-        "WaitPeriodMs": 10
+        "WaitPeriodMs": 10,
+        "AssertedControls": [
+            "<Replace with valid routing control arn>"
+        ]
+    },
+    "RuleConfig": {
+        "Inverted": true,
+        "Threshold": 1,
+        "Type": "AND"
     }
 }

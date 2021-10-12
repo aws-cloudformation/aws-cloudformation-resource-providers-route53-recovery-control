@@ -12,6 +12,7 @@ import software.amazon.awssdk.services.route53recoverycontrolconfig.model.ListSa
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.NewAssertionRule;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.NewGatingRule;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.RuleConfig;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Tag;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.UpdateSafetyRuleRequest;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.UpdateSafetyRuleResponse;
 
@@ -36,14 +37,19 @@ public class Translator {
    * @return awsRequest the aws service request to create a resource
    */
   static CreateSafetyRuleRequest translateToCreateRequest(final ResourceModel model) {
+    CreateSafetyRuleRequest.Builder requestBuilder = CreateSafetyRuleRequest.builder();
+
+    if (model.getTags() != null) {
+      requestBuilder.tags(buildCreateClusterRequestTags(model.getTags()));
+    }
 
     if (model.getAssertionRule() != null) {
-      return CreateSafetyRuleRequest.builder()
+      return requestBuilder
               .assertionRule(buildCreateAssertionRuleRequest(model))
               .build();
     }
 
-    return CreateSafetyRuleRequest.builder()
+    return requestBuilder
             .gatingRule(buildCreateGatingRuleRequest(model))
             .build();
   }
@@ -294,6 +300,15 @@ public class Translator {
             .gatingControls(gatingRule.gatingControls())
             .waitPeriodMs(gatingRule.waitPeriodMs())
             .build();
+  }
+
+  static List<Tag> buildCreateClusterRequestTags(List<software.amazon.route53recoverycontrol.safetyrule.Tag> tags) {
+    return tags.stream()
+        .map(modelTag -> Tag.builder()
+            .key(modelTag.getKey())
+            .value(modelTag.getValue())
+            .build())
+        .collect(Collectors.toList());
   }
 
   private static <T> Stream<T> streamOfOrEmpty(final Collection<T> collection) {

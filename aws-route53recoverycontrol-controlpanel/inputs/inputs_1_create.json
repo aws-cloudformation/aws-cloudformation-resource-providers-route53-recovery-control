@@ -1,4 +1,10 @@
 {
-    "ClusterArn": {{R53RecoveryClusterArn}},
-    "Name": "MyControlPanel"
+    "ClusterArn": "<Replace witha valid resource arn>",
+    "Name": "MyControlPanel",
+    "Tags": [
+        {
+            "Key": "CPTestKey",
+            "Value": "CPTestValue"
+        }
+    ]
 }
