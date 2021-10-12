@@ -1,0 +1,4 @@
+{
+    "ClusterArn": {{R53RecoveryClusterArn}},
+    "Name": "MyControlPanel"
+}

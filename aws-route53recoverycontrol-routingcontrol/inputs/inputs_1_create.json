@@ -1,0 +1,5 @@
+{
+    "ClusterArn": {{ControlPanelControlPanelClusterArn}},
+    "ControlPanelArn": {{RoutingControlContractTestControlPanelArn}},
+    "Name": "MyRoutingControl"
+}

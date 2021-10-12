@@ -1,0 +1,54 @@
+package software.amazon.route53recoverycontrol.routingcontrol;
+
+import software.amazon.awssdk.awscore.exception.AwsServiceException;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.Route53RecoveryControlConfigClient;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.DescribeRoutingControlRequest;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.DescribeRoutingControlResponse;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Route53RecoveryControlConfigException;
+import software.amazon.cloudformation.exceptions.CfnGeneralServiceException;
+import software.amazon.cloudformation.exceptions.CfnNotFoundException;
+import software.amazon.cloudformation.proxy.AmazonWebServicesClientProxy;
+import software.amazon.cloudformation.proxy.Logger;
+import software.amazon.cloudformation.proxy.ProgressEvent;
+import software.amazon.cloudformation.proxy.ProxyClient;
+import software.amazon.cloudformation.proxy.ResourceHandlerRequest;
+
+public class ReadHandler extends BaseHandlerStd {
+    private Logger logger;
+
+    protected ProgressEvent<ResourceModel, CallbackContext> handleRequest(
+        final AmazonWebServicesClientProxy proxy,
+        final ResourceHandlerRequest<ResourceModel> request,
+        final CallbackContext callbackContext,
+        final ProxyClient<Route53RecoveryControlConfigClient> proxyClient,
+        final Logger logger) {
+
+        this.logger = logger;
+
+        return proxy.initiate("AWS-Route53RecoveryControl-RoutingControl::Read", proxyClient, request.getDesiredResourceState(), callbackContext)
+            .translateToServiceRequest(Translator::translateToReadRequest)
+            .makeServiceCall(this::getRoutingControl)
+            .done(awsResponse -> ProgressEvent.defaultSuccessHandler(Translator.translateFromReadResponse(awsResponse)));
+    }
+
+    private DescribeRoutingControlResponse getRoutingControl(
+            DescribeRoutingControlRequest request,
+            ProxyClient<Route53RecoveryControlConfigClient> proxyClient
+    ) {
+        DescribeRoutingControlResponse response;
+
+        try {
+            response = proxyClient.injectCredentialsAndInvokeV2(request, ClientBuilder.getClient()::describeRoutingControl);
+        } catch (Route53RecoveryControlConfigException e) {
+            if (e.statusCode() == 404) {
+                throw new CfnNotFoundException(ResourceModel.TYPE_NAME,
+                        request.routingControlArn(), e);
+            } else
+                throw new CfnGeneralServiceException(request.routingControlArn(), e);
+        } catch (final AwsServiceException e) {
+            throw new CfnGeneralServiceException(request.routingControlArn(), e);
+        }
+
+        return response;
+    }
+}
