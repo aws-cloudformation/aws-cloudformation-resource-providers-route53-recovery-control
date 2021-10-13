@@ -1,3 +1,10 @@
 {
-    "Name": "MyFavoriteCluster"
+    "Name": "MyFavoriteCluster",
+    "Tags": [
+        {
+            "Key": "TestKey",
+            "Value": "TestValue"
+        }
+    ]
 }
+

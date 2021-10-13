@@ -13,6 +13,7 @@ import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Descri
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.DescribeClusterResponse;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.ListClustersRequest;
 import software.amazon.awssdk.services.route53recoverycontrolconfig.model.ListClustersResponse;
+import software.amazon.awssdk.services.route53recoverycontrolconfig.model.Tag;
 
 /**
  * This class is a centralized placeholder for
@@ -29,9 +30,12 @@ public class Translator {
    * @return awsRequest the aws service request to create a resource
    */
   static CreateClusterRequest translateToCreateRequest(final ResourceModel model) {
-    return CreateClusterRequest.builder()
-            .clusterName(model.getName())
-            .build();
+    CreateClusterRequest.Builder requestBuilder = CreateClusterRequest.builder();
+    if (null != model.getTags()) {
+      requestBuilder.tags(buildCreateClusterRequestTags(model.getTags()));
+    }
+    requestBuilder.clusterName(model.getName());
+    return requestBuilder.build();
   }
 
   /**
@@ -71,6 +75,15 @@ public class Translator {
       );
     }
     return clusterEndpoints;
+  }
+
+  static List<Tag> buildCreateClusterRequestTags(List<software.amazon.route53recoverycontrol.cluster.Tag> tags) {
+    return tags.stream()
+        .map(modelTag -> Tag.builder()
+            .key(modelTag.getKey())
+            .value(modelTag.getValue())
+            .build())
+        .collect(Collectors.toList());
   }
 
   /**

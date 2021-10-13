@@ -14,6 +14,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Properties" : {
         "<a href="#clusterarn" title="ClusterArn">ClusterArn</a>" : <i>String</i>,
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
+        "<a href="#tags" title="Tags">Tags</a>" : <i>[ <a href="tag.md">Tag</a>, ... ]</i>
     }
 }
 </pre>
@@ -25,6 +26,8 @@ Type: AWS::Route53RecoveryControl::ControlPanel
 Properties:
     <a href="#clusterarn" title="ClusterArn">ClusterArn</a>: <i>String</i>
     <a href="#name" title="Name">Name</a>: <i>String</i>
+    <a href="#tags" title="Tags">Tags</a>: <i>
+      - <a href="tag.md">Tag</a></i>
 </pre>
 
 ## Properties
@@ -33,7 +36,7 @@ Properties:
 
 Cluster to associate with the Control Panel
 
-_Required_: Yes
+_Required_: No
 
 _Type_: String
 
@@ -50,6 +53,16 @@ _Type_: String
 _Minimum_: <code>1</code>
 
 _Maximum_: <code>64</code>
+
+_Update requires_: [No interruption](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-no-interrupt)
+
+#### Tags
+
+A collection of tags associated with a resource
+
+_Required_: No
+
+_Type_: List of <a href="tag.md">Tag</a>
 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 

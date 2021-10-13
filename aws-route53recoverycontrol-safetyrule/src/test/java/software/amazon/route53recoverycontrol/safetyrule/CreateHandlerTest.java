@@ -149,4 +149,107 @@ public class CreateHandlerTest extends AbstractTestBase {
         assertThat(response.getMessage()).isNull();
         assertThat(response.getErrorCode()).isNull();
     }
+
+    @Test
+    @MockitoSettings(strictness = Strictness.LENIENT)
+    public void handleRequest_SimpleSuccessWithTag() {
+        final CreateHandler handler = new CreateHandler();
+        List<Tag> tags = ImmutableList.of(Tag.builder().key("TestKey").value("TestValue").build());
+
+        List<String> controls = new ArrayList<>();
+        controls.add("endpoint1");
+        controls.add("endpoint2");
+
+        RuleConfig config = RuleConfig.builder()
+            .type("OR")
+            .threshold(5)
+            .inverted(false)
+            .build();
+
+        final AssertionRule aRule = AssertionRule.builder()
+            .assertedControls(controls)
+            .waitPeriodMs(1)
+            .build();
+
+        final ResourceModel model = ResourceModel.builder()
+            .name("assertionRule")
+            .controlPanelArn("controlPanelArn")
+            .ruleConfig(config)
+            .assertionRule(aRule)
+            .tags(tags)
+            .build();
+
+        final ResourceHandlerRequest<ResourceModel> request = ResourceHandlerRequest.<ResourceModel>builder()
+            .desiredResourceState(model)
+            .build();
+
+        final software.amazon.awssdk.services.route53recoverycontrolconfig.model.RuleConfig ruleConfig =
+            software.amazon.awssdk.services.route53recoverycontrolconfig.model.RuleConfig.builder()
+                .type("OR")
+                .threshold(5)
+                .inverted(false)
+                .build();
+
+        final software.amazon.awssdk.services.route53recoverycontrolconfig.model.AssertionRule aRespRule =
+            software.amazon.awssdk.services.route53recoverycontrolconfig.model.AssertionRule.builder()
+                .name("assertionRule")
+                .controlPanelArn("controlPanelArn")
+                .assertedControls(controls)
+                .waitPeriodMs(1)
+                .ruleConfig(ruleConfig)
+                .status("DEPLOYED")
+                .safetyRuleArn("safetyRuleArn")
+                .build();
+
+        CreateSafetyRuleResponse createResponse = CreateSafetyRuleResponse.builder()
+            .assertionRule(aRespRule)
+            .build();
+
+        ResourceModel createModel = Translator.translateFromCreateResponse(createResponse);
+
+        CallbackContext context = new CallbackContext();
+        context.setSafetyRuleArn("safetyRuleArn");
+        context.setControlPanelArn("controlPanelArn");
+        context.setStatus("DEPLOYED");
+        context.setName(createModel.getName());
+        context.setRuleConfig(createModel.getRuleConfig());
+        context.setAssertionRule(createModel.getAssertionRule());
+
+        DescribeControlPanelResponse cpResponse = DescribeControlPanelResponse.builder().build();
+
+        DescribeRoutingControlResponse rcResponse = DescribeRoutingControlResponse.builder().build();
+
+        DescribeRoutingControlResponse rc2Response = DescribeRoutingControlResponse.builder().build();
+
+        DescribeSafetyRuleResponse describeResponse = DescribeSafetyRuleResponse.builder()
+            .assertionRule(aRespRule)
+            .build();
+
+        doReturn(cpResponse)
+            .doReturn(rcResponse)
+            .doReturn(rc2Response)
+            .doReturn(createResponse)
+            .doReturn(describeResponse)
+            .when(proxy)
+            .injectCredentialsAndInvokeV2(
+                ArgumentMatchers.any(),
+                ArgumentMatchers.any()
+            );
+
+        final ProgressEvent<ResourceModel, CallbackContext> response = handler.handleRequest(proxy, request, context, proxyClient, logger);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getStatus()).isEqualTo(OperationStatus.SUCCESS);
+        assertThat(response.getCallbackDelaySeconds()).isEqualTo(0);
+        assertThat(response.getResourceModels()).isNull();
+        assertThat(response.getMessage()).isNull();
+        assertThat(response.getErrorCode()).isNull();
+
+        ArgumentCaptor<CreateSafetyRuleRequest> requestCaptor = ArgumentCaptor.forClass(CreateSafetyRuleRequest.class);
+        verify(proxy, times(6)).injectCredentialsAndInvokeV2(requestCaptor.capture(), ArgumentMatchers.any());
+        CreateSafetyRuleRequest req = requestCaptor.getAllValues().get(3);
+        assertThat(req.hasTags()).isTrue();
+        assertThat(req.tags().get(0).key()).isEqualTo(tags.get(0).getKey());
+        assertThat(req.tags().get(0).value()).isEqualTo(tags.get(0).getValue());
+    }
 }

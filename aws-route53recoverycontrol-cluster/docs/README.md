@@ -13,6 +13,7 @@ To declare this entity in your AWS CloudFormation template, use the following sy
     "Type" : "AWS::Route53RecoveryControl::Cluster",
     "Properties" : {
         "<a href="#name" title="Name">Name</a>" : <i>String</i>,
+        "<a href="#tags" title="Tags">Tags</a>" : <i>[ <a href="tag.md">Tag</a>, ... ]</i>
     }
 }
 </pre>
@@ -23,6 +24,8 @@ To declare this entity in your AWS CloudFormation template, use the following sy
 Type: AWS::Route53RecoveryControl::Cluster
 Properties:
     <a href="#name" title="Name">Name</a>: <i>String</i>
+    <a href="#tags" title="Tags">Tags</a>: <i>
+      - <a href="tag.md">Tag</a></i>
 </pre>
 
 ## Properties
@@ -39,6 +42,16 @@ _Minimum_: <code>1</code>
 
 _Maximum_: <code>64</code>
 
+_Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
+
+#### Tags
+ 
+A collection of tags associated with a resource
+ 
+_Required_: No
+ 
+_Type_: List of <a href="tag.md">Tag</a>
+ 
 _Update requires_: [Replacement](https://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/using-cfn-updating-stacks-update-behaviors.html#update-replacement)
 
 ## Return Values
